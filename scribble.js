@@ -1,7 +1,8 @@
-goog.require('ble.interval.startRank');
-goog.require('ble.util.comparatorFromRank');
 goog.provide('ble.scribble.Drawing');
 goog.provide('ble.scribble.MutableDrawing');
+
+goog.require('ble.interval.startRank');
+goog.require('ble.util.comparatorFromRank');
 
 /**
  * @constructor
