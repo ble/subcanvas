@@ -1,10 +1,10 @@
 {
   "id": "subcanvas-3",
-  "paths": ["src/lib", "src/demo"],
+  "paths": ["../src/lib", "../src/demo"],
   "mode": "ADVANCED",
   "level": "VERBOSE",
   "inputs": [
-    "src/demo/use_canvas_3.js",
+    "../src/demo/use_canvas_3.js",
   ],
-  "externs": ["src/externs/extern_webkitRAF.js"]
+  "externs": ["../src/externs/extern_webkitRAF.js"]
 }
