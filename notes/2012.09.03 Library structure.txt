@@ -73,26 +73,52 @@ accessing in different ways:
     ◎ extraneous, versioned google closure library as git module
     ◎ extraneous, versioned subcanvas as git module
   ○ src: library functionality:
-      ◎ gif-related:
-        ◉ gif object model
-        ◉ gif describer
-        ◉ gif-to-canvas renderer
-      ◎ data streams
-        ◉ bitwise reading and writing
-        ◉ readers and writers for arraybuffers / uint8arrays
-        ◉ readers and writers for length-prefixed block encoding
-      ◎ lzw
-        ◉ non-used, unknown correctness lzw code
-        ◉ correct, ~fast variable length lzw reading (attribute to Go std lib)
-        ◉ correct, slow VL lzw writing code (should imitate Go std lib instead)
-      ◎ testing helpers
-        ◉ better-than-printf trace recording tool
-        ◉ file picker for loading arraybuffer
+    ◎ gif-related:
+      ◉ gif object model
+      ◉ gif describer
+      ◉ gif-to-canvas renderer
+    ◎ data streams
+      ◉ bitwise reading and writing
+      ◉ readers and writers for arraybuffers / uint8arrays
+      ◉ readers and writers for length-prefixed block encoding
+    ◎ lzw
+      ◉ non-used, unknown correctness lzw code
+      ◉ correct, ~fast variable length lzw reading (attribute to Go std lib)
+      ◉ correct, slow VL lzw writing code (should imitate Go std lib instead)
+    ◎ testing helpers
+      ◉ better-than-printf trace recording tool
+      ◉ file picker for loading arraybuffer
   ○ src/test: application and library-checking code
-      ◎ few tests covering bitwise stuff, stream reader, VL lzw writer
-      ◎ gif generation example
-      ◎ gif rendering example
-      ◎ gif describing example
+    ◎ few tests covering bitwise stuff, stream reader, VL lzw writer
+    ◎ gif generation example
+    ◎ gif rendering example
+    ◎ gif describing example
   ○ test
-      ◎ one html per 'entry point' / 'program'
-        ◉ each html is empty except for including a (plovr-served) script
+    ◎ one html per 'entry point' / 'program'
+      ◉ each html is empty except for including a (plovr-served) script
+
+
+● The essentials in projects such as this are:
+  ○ infrastructure
+    ◎ plovr
+    ◎ plovr configs
+      ◉ for typechecking (zeroth-order testing)
+      ◉ for tests
+      ◉ for demos
+      ◉ for compilation/packaging (assuming I ever get that far)
+    ◎ Makefile
+      ◉ serve
+      ◉ compile / typecheck
+    ◎ serve script (convenience calling `make serve`)
+  ○ source
+  ○ resources 
+    ◎ scaffolding page per entry point
+      ◉ or is it possible to write general scaffold?
+      ◉ html page w/ single script
+      ◉ script opens plovr config list
+      ◉ script lets user choose from loaded plovr configs
+      ◉ selected config reflected in query / use history to set addr
+      ◉ use history / query so each config has unique uri
+    ◎ test or demo inputs
+    ◎ images
+    ◎ css
