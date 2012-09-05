@@ -116,3 +116,27 @@ accessing in different ways:
     ◎ test or demo inputs
     ◎ images
     ◎ css
+
+So the structure of 'subcanvas' should be
+● serve.sh
+● build/
+  ○ plovr.jar
+  ○ Makefile
+● config/
+  ○ {one config per entry point}
+● src/
+  ○ externs/  {if any externs}
+  ○ lib/  {library-quality code}
+  ○ test/  {if any tests}
+  ○ demo/  {if showing off functionality}
+  ○ app/
+● resource/
+  ○ images/
+  ○ css/
+  ○ input/
+● pages/
+● The essentials in projects such as this are:
+  ○ infrastructure
+    ◎ plovr
+      ◉ for typechecking (zeroth-order testing)
+ 
