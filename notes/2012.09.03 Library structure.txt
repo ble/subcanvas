@@ -113,12 +113,6 @@ accessing in different ways:
   ○ source
   ○ resources 
     ◎ scaffolding page per entry point
-      ◉ or is it possible to write general scaffold?
-      ◉ html page w/ single script
-      ◉ script opens plovr config list
-      ◉ script lets user choose from loaded plovr configs
-      ◉ selected config reflected in query / use history to set addr
-      ◉ use history / query so each config has unique uri
     ◎ test or demo inputs
     ◎ images
     ◎ css
