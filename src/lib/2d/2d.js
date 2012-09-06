@@ -1,9 +1,11 @@
-goog.require('goog.math.Box');
-
 goog.provide('ble._2d');
 goog.provide('ble._2d.DrawSurface');
 goog.provide('ble._2d.Drawable');
 goog.provide('ble._2d.DrawPart');
+
+goog.require('ble.interval.AdjustableInterval');
+
+goog.require('goog.math.Box');
 
 /**
  * @interface

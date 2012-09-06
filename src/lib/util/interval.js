@@ -87,7 +87,6 @@ ble.interval.endRank = function(x) { return x.end(); };
 
 /**
  * @constructor
- * @abstract
  */
 ble.interval.Tweaker = function() {};
 

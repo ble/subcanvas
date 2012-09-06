@@ -1,11 +1,11 @@
-goog.require('ble._2d');
-goog.require('ble._2d.path.painterDefault');
-
 goog.provide('ble._2d.Replay');
 goog.provide('ble._2d.StrokeReplay'); 
 goog.provide('ble._2d.PolylineReplay');
 goog.provide('ble._2d.EraseReplay');
 
+goog.require('ble._2d');
+goog.require('ble._2d.path.painterDefault');
+goog.require('ble.util.binarySearch');
 
 /**
  * @constructor

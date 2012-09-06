@@ -1,8 +1,8 @@
 {
   "id": "icon",
-  "paths": ".",
+  "paths": ["../src/lib"],
   "mode": "ADVANCED",
   "level": "VERBOSE",
-  "inputs": ["style_icon.js", "icon_caps.js", "subcanvas.js", "scribbles.js", "mocap.js", "2d.js", "replay.js", "stylepicker.js", "path.js", "json.js"],
-  "externs": ["extern_webkitRAF.js"]
+  "inputs": ["../src/lib/drawing/stylepicker.js"],
+  "externs": ["../src/externs/extern_webkitRAF.js"]
 }

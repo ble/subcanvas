@@ -23,10 +23,10 @@ ble.json.PrettyPrinter.prototype.currentIndent_ = function() {
  * param {Array} sb
  */
 ble.json.PrettyPrinter.prototype.serializeObject_ = function(_obj, sb) {
-  if(typeof _obj == 'object') {
+  if(goog.isObject(_obj)) {
     var obj;
     if(goog.isDef(_obj.toJSON)) {
-      obj = _obj.toJSON();
+      obj = /** @type{Object} */ _obj.toJSON();
     }
     if(!obj) {
       obj = _obj;
