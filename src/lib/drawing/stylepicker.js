@@ -150,19 +150,16 @@ ble.scribble.style.StylePicker.prototype.createDom = function() {
 };
 
 ble.scribble.style.StylePicker.prototype.enterDocument = function() {
-  goog.base(this, "enterDocument");
+  goog.base(this, 'enterDocument');
 
   var sEl = this.slider.getElement();
   sEl.style['width'] = 20;
   sEl.style['height']  = this.height;
-  sEl.style['display'] = "inline-block";
+  sEl.style['display'] = 'inline-block';
   this.slider.setStep(1);
   this.slider.setMinimum(1);
   this.slider.setMaximum(75);
   this.slider.setValue(1);
-
-  this.bigIcon.getRawContext().lineJoin = "round";
-  this.bigIcon.getRawContext().lineCap = "round";
 
   for(var i = 0; i < this.smallIcons.length; i++) {
     var ctx = this.smallIcons[i].getRawContext();

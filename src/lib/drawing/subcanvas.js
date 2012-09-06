@@ -274,7 +274,7 @@ ble.scratch.Canvas.prototype.withClearContext = function(action) {
 };
 
 /**
- * @private
+ * @protected
  */
 ble.scratch.Canvas.prototype.getRawContext = function() {
   return this.element_.getContext("2d");
@@ -298,6 +298,9 @@ ble.scratch.Canvas.prototype.createDom = function() {
  * @override
  */
 ble.scratch.Canvas.prototype.enterDocument = function() {
+  goog.base(this, 'enterDocument');
+  this.getRawContext().lineJoin = "round";
+  this.getRawContext().lineCap = "round";
 };
 
 /**

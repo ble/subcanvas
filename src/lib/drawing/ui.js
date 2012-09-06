@@ -128,6 +128,7 @@ ble.scribble.Canvas.prototype.makeModes = function() {
 };
 
 ble.scribble.Canvas.prototype.enterDocument = function() {
+  goog.base(this, 'enterDocument');
   this.setMode(0);
 };
 
