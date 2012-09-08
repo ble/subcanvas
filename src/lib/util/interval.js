@@ -7,6 +7,8 @@ goog.provide('ble.interval.Impl');
 
 goog.provide('ble.interval.Tweaker');
 goog.provide('ble.interval.NoOverlapTweaker');
+goog.provide('ble.interval.Gapless');
+
 goog.provide('ble.interval.Fetcher');
 
 goog.provide('ble.interval.startRank');
