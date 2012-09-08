@@ -5,6 +5,9 @@ goog.require('ble.scratch.Canvas');
 goog.require('ble.mocap.Stroke');
 goog.require('ble.scribble.MutableDrawing');
 
+goog.require('ble.scribble.style.StylePicker');
+goog.require('ble.scribble.style.EventType');
+
 goog.require('ble._2d');
 goog.require('ble._2d.path.painterDefault');
 goog.require('ble._2d.PolylineReplay');
