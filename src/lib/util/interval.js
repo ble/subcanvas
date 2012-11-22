@@ -158,19 +158,22 @@ ble.interval.NoOverlap.prototype.altered_ = function(plan, index) {
 ble.interval.Gapless = function() {};
 goog.inherits(ble.interval.Gapless, ble.interval.Tweaker);
 
-ble.interval.Gapless.prototype.prepare_ = ble.interval.NoOverlap.prototype.prepare_;
-ble.interval.Gapless.prototype.altered_ = function(plan, index) {
-  if(index == 0) {
-    return plan[index];
-  } else {
-    var lastEnd = ble.util.maxByWithin(ble.interval.endRank, plan, 0, index);
-    var interval = plan[index];
-    if(interval.start() > lastEnd) {
-      return interval.withStartAt(lastEnd);
-    } else {
-      return interval;
-    }
+ble.interval.Gapless.prototype.prepare_ = function(intervals) {
+  var ordered = intervals.slice();
+  if(!ble.util.isSortedBy(ble.interval.startRank, ordered)) {
+    ordered.sort(ble.util.comparatorFromRank(ble.interval.startRank));
   }
+  var lastEnd = ordered[0].end();
+  for(var i = 1; i < ordered.length; i++) {
+    if(ordered[i].start() < lastEnd)
+      ordered[i] = ordered[i].withStartAt(lastEnd);
+    lastEnd = Math.max(lastEnd, ordered[i].end());
+  }
+  return ordered;
+};
+
+ble.interval.Gapless.prototype.altered_ = function(plan, index) {
+  return plan[index];
 };
 
 /**
