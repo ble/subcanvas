@@ -4,6 +4,7 @@ goog.provide('ble._2d.PolylineReplay');
 goog.provide('ble._2d.EraseReplay');
 
 goog.require('ble._2d');
+goog.require('ble._2d.DrawPart');
 goog.require('ble._2d.path.painterDefault');
 goog.require('ble.util.binarySearch');
 
@@ -12,6 +13,7 @@ goog.require('ble.util.binarySearch');
  * @param {number} startTime
  * @param {Array.<number>} coordinates
  * @param {Array.<number>} times
+ * @implements {ble._2d.DrawPart}
  */
 ble._2d.Replay = function(startTime, coordinates, times) {
   this.startTime = startTime;

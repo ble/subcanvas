@@ -1,6 +1,9 @@
 goog.provide('ble.scribble.Canvas');
 goog.provide('ble.scribble.UI');
 
+goog.provide('ble.scribble.EventType');
+goog.provide('ble.scribble.DrawEvent');
+
 goog.require('ble.scratch.Canvas');
 goog.require('ble.mocap.Stroke');
 goog.require('ble.scribble.MutableDrawing');
@@ -11,11 +14,36 @@ goog.require('ble.scribble.style.EventType');
 goog.require('ble._2d');
 goog.require('ble._2d.path.painterDefault');
 goog.require('ble._2d.PolylineReplay');
+goog.require('ble._2d.Replay');
 goog.require('ble._2d.DrawPart');
 goog.require('ble.interval.Fetcher');
 goog.require('ble.interval.startRank');
 goog.require('goog.events');
+goog.require('goog.events.Event');
 goog.require('goog.events.EventType');
+
+
+/**
+ * @enum {string}
+ */
+ble.scribble.EventType = {
+  DRAW_START: 'draw_start',
+  DRAW_PROGRESS: 'draw_progress',
+  DRAW_FINISH: 'draw_finish'
+}
+
+/**
+ * @constructor
+ * @extends {goog.events.Event}
+ * @param {string} type
+ * @param {ble.scribble.Canvas} target
+ * @param {ble._2d.Replay} drawn
+ */
+ble.scribble.DrawEvent = function(type, target, drawn) {
+  goog.events.Event.call(this, type, target);
+  this.drawn = drawn;
+}
+goog.inherits(ble.scribble.DrawEvent, goog.events.Event);
 
 /**
  * @constructor
@@ -106,14 +134,35 @@ ble.scribble.Canvas.prototype.handleEvent = function(event) {
   if(event.type == ble.mocap.EventType.BEGIN) {
     drawing.setCurrent(this.converter(event.capture, this.style));
     this.withContext(this.repaintComplete);
+
+    this.dispatchEvent(
+        new ble.scribble.DrawEvent(
+          ble.scribble.EventType.DRAW_START,
+          this,
+          drawing.getCurrent()));
+
   } else if(event.type == ble.mocap.EventType.PROGRESS ||
             event.type == ble.mocap.EventType.CONTROLPOINT) {
     drawing.setCurrent(this.converter(event.capture, this.style));
     this.withContext(this.repaintComplete);
+
+    this.dispatchEvent(
+        new ble.scribble.DrawEvent(
+          ble.scribble.EventType.DRAW_PROGRESS,
+          this,
+          drawing.getCurrent()));
+
   } else if(event.type == ble.mocap.EventType.END) {
     drawing.setCurrent(this.converter(event.capture, this.style));
+    var part = drawing.getCurrent();
     drawing.recordCurrent();
-    this.dispatchEvent(event);
+    this.dispatchEvent(
+        new ble.scribble.DrawEvent(
+          ble.scribble.EventType.DRAW_FINISH,
+          this,
+          part));
+
+
   }
 
 };
