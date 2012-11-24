@@ -29,7 +29,7 @@ goog.require('goog.events.EventType');
 ble.scribble.EventType = {
   DRAW_START: 'draw_start',
   DRAW_PROGRESS: 'draw_progress',
-  DRAW_FINISH: 'draw_finish'
+  DRAW_END: 'draw_end'
 }
 
 /**
@@ -158,7 +158,7 @@ ble.scribble.Canvas.prototype.handleEvent = function(event) {
     drawing.recordCurrent();
     this.dispatchEvent(
         new ble.scribble.DrawEvent(
-          ble.scribble.EventType.DRAW_FINISH,
+          ble.scribble.EventType.DRAW_END,
           this,
           part));
 

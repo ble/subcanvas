@@ -1,0 +1,7 @@
+{
+  "id": "bind-to-scribble",
+  "paths": ["../src/lib"],
+  "mode": "ADVANCED",
+  "level": "VERBOSE",
+  "inputs": "../src/demo/bind_to_scribble.js"
+}
