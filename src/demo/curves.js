@@ -16,36 +16,37 @@ var subcanvas = new ble.scratch.Subcanvas(
     new goog.math.Box(0, canvas.width_px, canvas.height_px, 0),
     new goog.math.Box(size * yOverX, size, -size*yOverX, -size));
 
-var theCurve = new ble.curves.Kappa(
-    new goog.math.Vec2(0, 0),
-    0,
-    []);
+var iter = 0;
+window.setInterval(function() {
+  var th = 2 * Math.PI * iter / 100;
+  var i0 = 100*(1 - Math.cos(th));
 
-var segments = theCurve.curve;
-var p = Math.PI / 12;
-goog.scope(function() {
-  var c = ble.curves.CurvedPart;
-  var a = ble.curves.Angle;
-  segments.push(new c(1, 3*p));
-  segments.push(new c(1, 6*p));
-  segments.push(new c(1, -3*p));
-  segments.push(new c(1, -6*p));
-  segments.push(new c(0.5, -12*p));
-  segments.push(new a(-5*p));
-  segments.push(new c(0.75, 6*p));
-  segments.push(new a(6*p));
-  segments.push(new c(0.15, 0));
-});
-
-subcanvas.withContext(function(ctx) {
-  var rSym = 20;
-  ctx.save();
-  ctx.strokeStyle = "rgb(0,0,0)";
-  for(var i = 0; i < rSym; i++) { 
-    theCurve.rendering = null;
-    theCurve.angle0 = Math.PI * 2 * i / rSym;
-    window.console.log(theCurve.angle0);
-    theCurve.draw(ctx);
+  var theCurve = new ble.curves.Kappa(
+      new goog.math.Vec2(0, 0),
+      0,
+      []);
+  theCurve.curve = [];
+  theCurve.deltaAngle = 10 * ble.curves.DEGREE;
+  var segments = theCurve.curve;
+  var imax = 1000;
+  for(var i = 0; i < imax+i0; i++) { 
+    var sign = i % 3 == 0 ? 1 : -1;
+    var radius = 0.0015 * (i+i0);
+    var angle = Math.PI * sign / 3.5;
+    var inorm = i / imax;
+    var length = Math.abs(angle) * radius;
+    segments.push(new ble.curves.CurvedPart(length, sign / radius));
   }
-  ctx.restore();
-});
+  canvas.withContext(function(ctx) {
+    ctx.clearRect(0, 0, this.width_px, this.height_px);
+  });
+  subcanvas.withContext(function(ctx) {
+    ctx.save();
+    ctx.strokeStyle = "rgb(0,0,0)";
+    ctx.lineWidth *= 0.75;
+    theCurve.rendering = null;
+    theCurve.draw(ctx);
+    ctx.restore();
+  });
+  iter++;
+}, 10);
