@@ -314,7 +314,7 @@ ble.scratch.Canvas.prototype.canDecorate = function(element) {
 /**
  * override
  */
-ble.scratch.Canvas.prototype.decorateInternal = null;
+ble.scratch.Canvas.prototype.decorateInternal = goog.abstractMethod;
 
 
 
