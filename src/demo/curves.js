@@ -22,17 +22,18 @@ var theCurve = new ble.curves.Kappa(
     []);
 
 var segments = theCurve.curve;
+var p = Math.PI / 12;
 goog.scope(function() {
   var c = ble.curves.CurvedPart;
   var a = ble.curves.Angle;
-  segments.push(new c(1, 45));
-  segments.push(new c(1, 90));
-  segments.push(new c(1, -45));
-  segments.push(new c(1, -90));
-  segments.push(new c(0.5, -180));
-  segments.push(new a(-75));
-  segments.push(new c(0.75, 90));
-  segments.push(new a(90));
+  segments.push(new c(1, 3*p));
+  segments.push(new c(1, 6*p));
+  segments.push(new c(1, -3*p));
+  segments.push(new c(1, -6*p));
+  segments.push(new c(0.5, -12*p));
+  segments.push(new a(-5*p));
+  segments.push(new c(0.75, 6*p));
+  segments.push(new a(6*p));
   segments.push(new c(0.15, 0));
 });
 

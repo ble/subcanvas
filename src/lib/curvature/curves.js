@@ -97,12 +97,13 @@ ble.curves.CurvaturePart.prototype.curvatureFn = function(length) { return this.
 /**
  * Subsection of a curve where the curvature is constant
  * @param {number} length
+ * @param {number} curvature radians per unit length
  * @constructor
  * @extends {ble.curves.CurvaturePart}
  */
 ble.curves.CurvedPart = function(length, curvature) {
   ble.curves.CurvaturePart.call(this);
-  this.extremeCurvature = curvature * ble.curves.DEGREE;
+  this.extremeCurvature = curvature;
   this.length = length;
 };
 goog.inherits(ble.curves.CurvedPart, ble.curves.CurvaturePart);
@@ -110,13 +111,13 @@ goog.inherits(ble.curves.CurvedPart, ble.curves.CurvaturePart);
 
 /**
  * A sharp angle in a curve
- * @param {number} degrees
+ * @param {number} radians
  * @constructor
  * @extends {ble.curves.CurvaturePart}
  */
-ble.curves.Angle = function(degrees) {
+ble.curves.Angle = function(radians) {
   ble.curves.CurvaturePart.call(this);
-  this.sharpAngle = degrees * ble.curves.DEGREE;
+  this.sharpAngle = radians;
 };
 goog.inherits(ble.curves.Angle, ble.curves.CurvaturePart);
 
