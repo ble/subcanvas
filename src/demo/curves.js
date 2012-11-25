@@ -6,10 +6,10 @@ goog.require('ble.scratch.Subcanvas');
 
 goog.require('ble.curves.Kappa');
 
-var canvas = new ble.scratch.Canvas(640, 480);
+var canvas = new ble.scratch.Canvas(1366, 768);
 canvas.render(document.body);
 
-var size = 5;
+var size = 3;
 var yOverX = canvas.height_px / canvas.width_px;
 var subcanvas = new ble.scratch.Subcanvas(
     canvas,
@@ -22,98 +22,149 @@ canvas.withContext(function(ctx) {
   ctx.clearRect(0, 0, this.width_px, this.height_px);
 });
 
+var pathInvertVerticalHalfCircle = function(ctx, x, y, r, move, flip, arc) {
+  if(move)
+    ctx.moveTo(x, y - r);
+  else
+    ctx.lineTo(x, y - r);
+  var s = flip ? r : -r;
+  ctx.lineTo(x - s, y - r);
+  ctx.lineTo(x - s, y + r);
+  ctx.lineTo(x,     y + r);
+  ctx.lineTo(x,     y - r);
+  if(arc)
+    ctx.arc(x, y, r, Math.PI / 2, -Math.PI / 2, !flip);
+  ctx.closePath();
+}
 
-var pathOne = function(ctx, x, y, inverse, first, second, flip) {
-  var r = 1/2;
-  var s = flip ? -r : r;
 
-  if(inverse) {
-    ctx.moveTo(x - r, y - s);
-    ctx.lineTo(x - r, y + s);
-    ctx.lineTo(x + r, y + s);
-    ctx.lineTo(x + r, y - s);
-    ctx.lineTo(x - r, y - s);
-  }
+var pathVerticalHalfCircle = function(ctx, x, y, r, move, flip) {
+  if(move)
+    ctx.moveTo(x, y - r);
+  else
+    ctx.lineTo(x, y - r);
+  ctx.arc(x, y, r, -Math.PI / 2, Math.PI / 2, flip);
+  ctx.closePath();
+}
 
-  if(first) {
-    if(inverse)
-      ctx.lineTo(x - r, y - s);
-    else
-      ctx.moveTo(x - r, y - s);
-    ctx.arc(x, y - s, r, 0, (flip ? -1 : 1) * Math.PI / 2, flip);
-  }
-  if(second) {
-    if(first || inverse)
-      ctx.lineTo(x - r, y);
-    else
-      ctx.moveTo(x - r, y);
-    ctx.arc(x, y, r, 0, Math.PI, flip);
-  }
-  if(first) {
-    ctx.lineTo(x, y);
-    ctx.arc(x, y - s, r, (flip ? -1 : 1) * Math.PI / 2, Math.PI, flip);
-  }
-  /*
-  if(first) {
+
+var pathInvertHorizontalHalfCircle = function(ctx, x, y, r, move, flip, arc) {
+  if(move)
     ctx.moveTo(x - r, y);
-    ctx.arc(x, y, r, 0, Math.PI);
-  }
-  if(second) {
-    ctx.lineTo(x - r, y - r);
-    ctx.arc(x, y - r, r, 0, Math.PI);
-  }
-  */
-};
+  var s = flip ? r : -r;
+  ctx.lineTo(x - r, y - s);
+  ctx.lineTo(x + r, y - s);
+  ctx.lineTo(x + r, y);
+  ctx.lineTo(x - r, y);
+  if(arc)
+    ctx.arc(x, y, r, 0, Math.PI, flip);
+  ctx.closePath();
+}
 
-//ops = [pathSemiCircle, pathDoubleSemiCircle, pathInverseSemiCircle];
+var pathHorizontalHalfCircle = function(ctx, x, y, r, move, flip) {
+  if(move)
+    ctx.moveTo(x - r, y);
+  else
+    ctx.lineTo(x - r, y);
+  ctx.arc(x, y, r, 0, Math.PI, flip);
+  ctx.closePath();
+}
 
-subcanvas.withContext(function(ctx) {
-  ctx.save();
-  ctx.fillStyle = "rgb(255,0,0)";
-  ctx.beginPath();
-  pathOne(ctx, -2, 0, 0, 1, 1, false);
-  pathOne(ctx, -1, 0, 0, 0, 1, false);
-  pathOne(ctx, 0, 0, 0, 1, 0, false);
-  pathOne(ctx, -2, 1, 1, 1, 1, false);
-  pathOne(ctx, -1, 1, 1, 0, 1, false);
-  pathOne(ctx, 0, 1, 1, 1, 0, false);
+var drawBlock = function(ctx, x, y, r, code) {
+  var semi1    = code & 1,
+      semi2    = code & 2,
+      vertical = code & 4,
+      flip     = code & 8,
+      invert   = code & 8;
+  var x1 = vertical  ? flip ? x + r : x - r : x;
+  var y1 = !vertical ? flip ? y + r : y - r : y;
+  var f;
+  if(!vertical && invert)
+    f = pathInvertHorizontalHalfCircle;
+  if(!vertical && !invert)
+    f = pathHorizontalHalfCircle;
+  if(vertical && invert)
+    f = pathInvertVerticalHalfCircle;
+  if(vertical && !invert)
+    f = pathVerticalHalfCircle;
+  if(semi1 || invert)
+    f(ctx, x, y, r, true, flip, semi1);
+  if(semi2 || invert)
+    f(ctx, x1, y1, r, true, flip, semi2);
+}
 
-  pathOne(ctx, -2, 2, 0, 1, 1, true);
-  pathOne(ctx, -1, 2, 0, 0, 1, true);
-  pathOne(ctx, 0, 2, 0, 1, 0, true);
-
-  pathOne(ctx, -2, -1, 1, 1, 1, true);
-  pathOne(ctx, -1, -1, 1, 0, 1, true);
-  pathOne(ctx, 0, -1, 1, 1, 0, true);
-
-  ctx.fill();
-  ctx.restore();
-  return;
-  for(var x = -size; x <= size; x += 1) {
-    for(
-        var y = Math.round(-size*yOverX);
-        y <= Math.round(size*yOverX);
-        y+= 1) {
-      var op = Math.floor(3 * Math.random());
-      ops[op](ctx, x, y, 1);
-      /*
-      var parity = (Math.random() >= 0.5);
-      if(parity) {
-        ctx.moveTo(x + 0.5, y);
-        ctx.arc(x, y, 0.5, 0, Math.PI);
-        ctx.closePath();
-      } else {
-        ctx.moveTo(x + 0.5, y);
-        ctx.lineTo(x + 0.5, y+1);
-        ctx.lineTo(x - 0.5, y+1);
-        ctx.lineTo(x - 0.5, y);
-        ctx.arc(x, y, 0.5, Math.PI, 0, true);
-        ctx.closePath();
-      }
-      */
+var generateCodeSequence = function(xlow, xhigh, ylow, yhigh, r) {
+  var codes = [];
+  for(var x = xlow; x <= xhigh; x+=r) {
+    for(var y = ylow; y <= yhigh; y+=r) {
+      codes.push(Math.floor(32 * Math.random()));
     }
   }
+  return codes;
+};
 
+var drawCodes = function(ctx, xlow, xhigh, ylow, yhigh, codes, r) { 
+  var count = 0;
+  for(var x = xlow; x <= xhigh; x+=r) {
+    for(var y = ylow; y <= yhigh; y+=r) {
+     drawBlock(ctx, x, y, r / 2, codes[count % codes.length]);
+     count++;
+    }
+  }
+};
+
+var rgba = function(r, g, b, a) {
+  r = Math.floor(r);
+  g = Math.floor(g);
+  b = Math.floor(b);
+  var color = "rgba(" + [r,g,b,a].join(",") + ")";
+  window.console.log(color);
+  return color
+};
+
+subcanvas.withContext(function(ctx) {
+  var rgbs = [
+    [255, 255, 128],
+    [128, 0, 0],
+    [192, 255, 192],
+    [0, 255, 192],
+    [192, 64, 32],
+  ];
+  var code0 = false;
+  for(var scale = 1; scale < 5; scale++) {
+    var alpha = 1.0 / scale / scale;
+    var r = 1.0 / scale;
+    for(var color = 0; color < rgbs.length; color++) {
+      window.console.log(rgbs[color]);
+      var fill = rgba(rgbs[color][0], rgbs[color][1], rgbs[color][2], alpha);
+      ctx.fillStyle = fill;
+      var codes = generateCodeSequence(-size, size, -size * yOverX, size * yOverX, r);
+      ctx.beginPath();
+      drawCodes(ctx, -size, size, -(1 + size * yOverX), 1 + size * yOverX, codes, r);
       ctx.fill();
-  ctx.restore();
+
+      ctx.beginPath();
+      drawCodes(ctx, -size, size, -(1 + size * yOverX), 1 + size * yOverX, codes, r);
+      ctx.lineWidth *= 4;
+      ctx.strokeStyle = rgba(0, 0, 0, alpha * 0.25);
+      ctx.stroke();
+      ctx.lineWidth /= 4;
+      ctx.strokeStyle = rgba(255, 255, 255, alpha);
+      ctx.stroke();
+      
+      if(code0 == false && color == rgbs.length - 1)
+        code0 = codes;
+    }
+
+  }
+
+    ctx.beginPath();
+    drawCodes(ctx, -size, size, -(1 + size * yOverX), 1 + size * yOverX, codes, 1);
+    ctx.lineWidth *= 4;
+    ctx.strokeStyle = rgba(0, 0, 0, 0.25);
+    ctx.stroke();
+    ctx.lineWidth /= 4;
+    ctx.strokeStyle = rgba(255, 255, 255, 1);
+    ctx.stroke();
+
 });
