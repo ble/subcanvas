@@ -75,7 +75,7 @@ var drawBlock = function(ctx, x, y, r, code) {
       semi2    = code & 2,
       vertical = code & 4,
       flip     = code & 8,
-      invert   = code & 8;
+      invert   = code & 16;
   var x1 = vertical  ? flip ? x + r : x - r : x;
   var y1 = !vertical ? flip ? y + r : y - r : y;
   var f;
@@ -95,9 +95,22 @@ var drawBlock = function(ctx, x, y, r, code) {
 
 var generateCodeSequence = function(xlow, xhigh, ylow, yhigh, r) {
   var codes = [];
+  var count = 0;
   for(var x = xlow; x <= xhigh; x+=r) {
     for(var y = ylow; y <= yhigh; y+=r) {
-      codes.push(Math.floor(32 * Math.random()));
+//      var low = 1 + (Math.floor(count + Math.random()/2 - 0.25) % 3);
+      var low = Math.floor(count + Math.random()/2 - 0.25) % 4;
+      var hi = 4 * Math.floor(Math.random() * 8);
+      if(Math.random() > 0.35) {
+        low = 0;
+        hi = hi & 15;
+      }
+      if(Math.random() > 0.5) {
+        hi = hi & 15;
+      }
+
+      codes.push(hi | low);
+      count++;
     }
   }
   return codes;
@@ -107,6 +120,20 @@ var drawCodes = function(ctx, xlow, xhigh, ylow, yhigh, codes, r) {
   var count = 0;
   for(var x = xlow; x <= xhigh; x+=r) {
     for(var y = ylow; y <= yhigh; y+=r) {
+     drawBlock(ctx, x, y, r / 2, codes[count % codes.length]);
+     count++;
+    }
+  }
+};
+
+var drawCodesProb = function(ctx, xlow, xhigh, ylow, yhigh, codes, r, p) { 
+  var count = 0;
+  for(var x = xlow; x <= xhigh; x+=r) {
+    for(var y = ylow; y <= yhigh; y+=r) {
+     if(Math.random() > p) {
+       count++;
+       continue;
+     }
      drawBlock(ctx, x, y, r / 2, codes[count % codes.length]);
      count++;
     }
@@ -123,48 +150,51 @@ var rgba = function(r, g, b, a) {
 };
 
 subcanvas.withContext(function(ctx) {
-  var rgbs = [
-    [255, 255, 128],
-    [128, 0, 0],
-    [192, 255, 192],
-    [0, 255, 192],
-    [192, 64, 32],
-  ];
-  var code0 = false;
-  for(var scale = 1; scale < 5; scale++) {
-    var alpha = 1.0 / scale / scale;
-    var r = 1.0 / scale;
-    for(var color = 0; color < rgbs.length; color++) {
-      window.console.log(rgbs[color]);
-      var fill = rgba(rgbs[color][0], rgbs[color][1], rgbs[color][2], alpha);
-      ctx.fillStyle = fill;
-      var codes = generateCodeSequence(-size, size, -size * yOverX, size * yOverX, r);
-      ctx.beginPath();
-      drawCodes(ctx, -size, size, -(1 + size * yOverX), 1 + size * yOverX, codes, r);
-      ctx.fill();
+  var fill = rgba(0, 0, 0, 1);
+  ctx.fillStyle = fill;
+  var codes = generateCodeSequence(-size, size, -size * yOverX, size * yOverX, 1);
 
-      ctx.beginPath();
-      drawCodes(ctx, -size, size, -(1 + size * yOverX), 1 + size * yOverX, codes, r);
-      ctx.lineWidth *= 4;
-      ctx.strokeStyle = rgba(0, 0, 0, alpha * 0.25);
-      ctx.stroke();
-      ctx.lineWidth /= 4;
-      ctx.strokeStyle = rgba(255, 255, 255, alpha);
-      ctx.stroke();
-      
-      if(code0 == false && color == rgbs.length - 1)
-        code0 = codes;
-    }
+  ctx.beginPath();
+  drawCodes(ctx, -size, size, -(1 + size * yOverX), 1 + size * yOverX, codes, 1);
+  ctx.strokeStyle = "rgb(255,0,0)";
+  ctx.lineWidth *= 8;
+  ctx.stroke(); 
+  ctx.fill();
+  ctx.strokeStyle = "rgb(255,255,255)";
+  ctx.lineWidth /= 2;
+  ctx.stroke(); 
+  ctx.strokeStyle = "rgb(0,0,0)";
+  ctx.lineWidth /= 2;
+  ctx.stroke(); 
 
-  }
+  var codes = generateCodeSequence(-size, size, -size * yOverX, size * yOverX, 1/2);
 
-    ctx.beginPath();
-    drawCodes(ctx, -size, size, -(1 + size * yOverX), 1 + size * yOverX, codes, 1);
-    ctx.lineWidth *= 4;
-    ctx.strokeStyle = rgba(0, 0, 0, 0.25);
-    ctx.stroke();
-    ctx.lineWidth /= 4;
-    ctx.strokeStyle = rgba(255, 255, 255, 1);
-    ctx.stroke();
+  ctx.beginPath();
+  drawCodes(ctx, -size, size, -(1 + size * yOverX), 1 + size * yOverX, codes, 1/2);
+  ctx.strokeStyle = "rgb(255,0,0)";
+  ctx.lineWidth *= 4;
+  ctx.stroke(); 
+  ctx.fill();
+  ctx.strokeStyle = "rgb(255,255,255)";
+  ctx.lineWidth /= 2;
+  ctx.stroke(); 
+  ctx.strokeStyle = "rgb(0,0,0)";
+  ctx.lineWidth /= 2;
+  ctx.stroke(); 
+
+  var codes = generateCodeSequence(-size, size, -size * yOverX, size * yOverX, 1/3);
+
+  ctx.beginPath();
+  drawCodes(ctx, -size, size, -(1 + size * yOverX), 1 + size * yOverX, codes, 1/3);
+  ctx.strokeStyle = "rgb(255,0,0)";
+  ctx.lineWidth *= 4;
+  ctx.stroke(); 
+  ctx.fill();
+  ctx.strokeStyle = "rgb(255,255,255)";
+  ctx.lineWidth /= 2;
+  ctx.stroke(); 
+  ctx.strokeStyle = "rgb(0,0,0)";
+  ctx.lineWidth /= 2;
+  ctx.stroke(); 
 
 });
