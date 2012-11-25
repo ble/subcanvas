@@ -1,0 +1,7 @@
+{
+  "id": "curves",
+  "paths": "../src/lib",
+  "mode": "SIMPLE",
+  "level": "VERBOSE",
+  "inputs": "../src/lib/drawing/ui.js"
+}
