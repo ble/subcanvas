@@ -107,7 +107,7 @@ ble._2d.StrokeReplay.prototype.at = function(time) {
 
   var indexEnd = Math.floor(ble.util.binarySearch(this.times, time));
   var draw = goog.bind(this.drawIndex_, this, indexEnd);
-  return {draw: draw};
+  return /**@type{ble._2d.Drawable}*/ {draw: draw};
 };
 
 /**
@@ -240,7 +240,7 @@ ble._2d.PolylineReplay.prototype.at = function(time) {
 
   var indexEnd = Math.floor(ble.util.binarySearch(this.times, time));
   var draw = goog.bind(this.drawIndex_, this, indexEnd);
-  return {draw: draw};
+  return /**@type{ble._2d.Drawable}*/ {draw: draw};
 };
 
 /**
@@ -377,7 +377,7 @@ ble._2d.EraseReplay.prototype.at = function(time) {
 
   var indexEnd = Math.floor(ble.util.binarySearch(this.times, time));
   var draw = goog.bind(this.drawIndex_, this, indexEnd);
-  return {draw: draw};
+  return /**@type{ble._2d.Drawable}*/ {draw: draw};
 };
 
 /**

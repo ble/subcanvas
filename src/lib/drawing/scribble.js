@@ -162,6 +162,11 @@ ble.scribble.MutableDrawing.prototype.getCurrent = function() {
   return this.current;
 };
 
+/** @return {ble._2d.Replay} */
+ble.scribble.MutableDrawing.prototype.getCurrentReplay = function() {
+  return /**@type {ble._2d.Replay} */ this.current;
+};
+
 ble.scribble.MutableDrawing.prototype.recordCurrent = function() {
   this.add(this.current.withStartAt(this.length()));
   this.current = null;

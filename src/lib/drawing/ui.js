@@ -134,12 +134,11 @@ ble.scribble.Canvas.prototype.handleEvent = function(event) {
   if(event.type == ble.mocap.EventType.BEGIN) {
     drawing.setCurrent(this.converter(event.capture, this.style));
     this.withContext(this.repaintComplete);
-
     this.dispatchEvent(
         new ble.scribble.DrawEvent(
           ble.scribble.EventType.DRAW_START,
           this,
-          drawing.getCurrent()));
+          drawing.getCurrentReplay()));
 
   } else if(event.type == ble.mocap.EventType.PROGRESS ||
             event.type == ble.mocap.EventType.CONTROLPOINT) {
@@ -150,11 +149,11 @@ ble.scribble.Canvas.prototype.handleEvent = function(event) {
         new ble.scribble.DrawEvent(
           ble.scribble.EventType.DRAW_PROGRESS,
           this,
-          drawing.getCurrent()));
+          drawing.getCurrentReplay()));
 
   } else if(event.type == ble.mocap.EventType.END) {
     drawing.setCurrent(this.converter(event.capture, this.style));
-    var part = drawing.getCurrent();
+    var part = drawing.getCurrentReplay();
     drawing.recordCurrent();
     this.dispatchEvent(
         new ble.scribble.DrawEvent(
