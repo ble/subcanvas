@@ -34,9 +34,13 @@ ble.scribble.style.StylePicker = function() {
   this.smallSize = Math.floor(this.height / 2);
   this.selectedMethod = 0;
   this.painter = new ble.scribble.style.IconPainter(this);
+  this.enabled = true;
 };
 goog.inherits(ble.scribble.style.StylePicker, goog.ui.Component);
 
+ble.scribble.style.StylePicker.prototype.setEnabled = function(enabled) {
+  this.enabled = enabled;
+};
 
 ble.scribble.style.StylePicker.prototype.height = 152;
 /*
@@ -170,6 +174,8 @@ ble.scribble.style.StylePicker.prototype.enterDocument = function() {
     this.smallIconContainer.getElement(),
     goog.events.EventType.CLICK,
     function(event){
+      if(!this.enabled)
+        return;
       var changed = false;
       for(var i = 0; i < this.smallIcons.length; i++) {
         if(event.target === this.smallIcons[i].getElement()) {
@@ -186,6 +192,8 @@ ble.scribble.style.StylePicker.prototype.enterDocument = function() {
     this);
 
   var styleChanged = function(event) {
+    if(!this.enabled)
+      return;
     this.repaint();
     this.styleChanged();
   };

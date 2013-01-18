@@ -187,7 +187,7 @@ ble.scribble.Canvas.prototype.setStyle = function(style) {
   this.style = style;
 };
 
-ble.scribble.Canvas.prototype.setMode = function(modeNum) {
+ble.scribble.Canvas.prototype.disableDrawing = function() {
   if(!goog.isNull(this.mocap_)) {
     goog.events.unlisten(
         this.getElement(),
@@ -198,10 +198,12 @@ ble.scribble.Canvas.prototype.setMode = function(modeNum) {
         ble.mocap.EventType.ALL,
         this);
     this.mocap_ = null;
-  }
-  var mode = this.modes[modeNum];
-  this.mocap_ = mode[0];
-  this.converter = mode[1];
+  } 
+}
+
+ble.scribble.Canvas.prototype.enableDrawing = function() {
+  this.mocap_ = this.mode[0];
+  this.converter = this.mode[1];
   goog.events.listen(
       this.getElement(),
       this.mocap_.eventTypesOfInterest,
@@ -210,7 +212,19 @@ ble.scribble.Canvas.prototype.setMode = function(modeNum) {
       this.mocap_,
       ble.mocap.EventType.ALL,
       this);
+}
 
+ble.scribble.Canvas.prototype.setEnabled = function(enabled) {
+  this.disableDrawing();
+  if(enabled) {
+    this.enableDrawing();
+  }
+};
+
+ble.scribble.Canvas.prototype.setMode = function(modeNum) {
+  this.disableDrawing();
+  this.mode = this.modes[modeNum]; 
+  this.enableDrawing();
 };
 
 ble.scribble.Canvas.prototype.exitDocument = function() {
@@ -252,6 +266,11 @@ ble.scribble.UI.prototype.createDom = function() {
   this.picker = new ble.scribble.style.StylePicker();
   this.addChild(this.canvas, true);
   this.addChild(this.picker, true); 
+};
+
+ble.scribble.UI.prototype.setEnabled = function(enabled) {
+  this.canvas.setEnabled(enabled);
+  this.picker.setEnabled(enabled);
 };
 
 ble.scribble.UI.prototype.enterDocument = function() {
