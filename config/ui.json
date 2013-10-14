@@ -1,5 +1,5 @@
 {
-  "id": "curves",
+  "id": "ui",
   "paths": "../src/lib",
   "mode": "SIMPLE",
   "level": "VERBOSE",

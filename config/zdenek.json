@@ -1,0 +1,10 @@
+{
+  "id": "zdeneksykora",
+  "paths": ["../src/lib", "../src/demo"],
+  "mode": "SIMPLE",
+  "level": "VERBOSE",
+  "inputs": [
+    "../src/demo/zdeneksykora.js",
+  ],
+  "externs": ["../src/externs/extern_webkitRAF.js"]
+}
