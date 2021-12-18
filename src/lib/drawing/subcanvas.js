@@ -227,7 +227,7 @@ ble.scratch.Canvas.prototype.forwardEvents = function(region, eventType) {
     for(var i = 0; i < eventType.length; i++) {
       this.forwardEvents(region, eventType[i]);
     }
-  } else if(!goog.isNull(eventType)) {
+  } else if(eventType !== null) {
     if(!(eventType in this.regions_))
       this.regions_[eventType] = [];
     var regions = this.regions_[eventType];

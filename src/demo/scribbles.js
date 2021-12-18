@@ -72,7 +72,7 @@ ble.Scribbles.prototype.blessScribble = function(s) {
   var result = [];
   for(var i = 0; i < s.length; i++) {
     var asReplay = this.deserializer.deserialize(s[i]);
-    if(goog.isNull(asReplay))
+    if(asReplay === null)
       console.log("bless error");
     else
       result.push(asReplay);

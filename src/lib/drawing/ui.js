@@ -127,7 +127,7 @@ ble.scribble.Canvas.prototype.animateInterval = function(replay_dur, capture_dur
 };
 
 ble.scribble.Canvas.prototype.handleEvent = function(event) {
-  ble.scratch.Canvas.handleEvent.call(this, event); // TODO: use `super.method` after converting to ES2015-style classes
+  ble.scribble.Canvas.superClass_.handleEvent.call(this, event); // TODO: use `super.method` after converting to ES2015-style classes
   if(event.propagationStopped_)
     return;
   var drawing = this.drawing;
@@ -188,7 +188,7 @@ ble.scribble.Canvas.prototype.setStyle = function(style) {
 };
 
 ble.scribble.Canvas.prototype.disableDrawing = function() {
-  if(!goog.isNull(this.mocap_)) {
+  if(this.mocap_ !== null) {
     goog.events.unlisten(
         this.getElement(),
         this.mocap_.eventTypesOfInterest,

@@ -43,7 +43,7 @@ ble.json.PrettyPrinter.prototype.serializeObject_ = function(_obj, sb) {
         sb.push(this.currentIndent_());
         this.serializeString_(key, sb);
         sb.push(":");
-        this.serialize_(value, sb);
+        sb.push(this.serialize(value));
         sep = ",\n";
       }
     }

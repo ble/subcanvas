@@ -139,7 +139,7 @@ goog.inherits(ble.scribble.MutableDrawing, ble.scribble.Drawing);
  */
 ble.scribble.MutableDrawing.prototype.draw = function(ctx) {
   ble.scribble.Drawing.prototype.draw.call(this, ctx);
-  if(!goog.isNull(this.current))
+  if(this.current !== null)
     this.current.draw(ctx);
 };
 
