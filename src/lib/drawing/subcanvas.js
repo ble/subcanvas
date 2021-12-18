@@ -160,7 +160,7 @@ ble.scratch.Subcanvas.prototype.dispatchEvent = function(event) {
       event.offsetY = event.virtualY;
     } 
   }
-  return goog.base(this, "dispatchEvent", event);
+  return ble.scratch.Subcanvas.superClass_.dispatchEvent.call(this, event); // TODO: change to `super.method` after changing to ES2015 classes and inheritance
 };
 
 ble.scratch.Subcanvas.prototype.virtualizeEvent = function(event) {
@@ -213,7 +213,6 @@ ble.scratch.Canvas = function(width_px, height_px) {
   var domHelper = new goog.dom.DomHelper();
   goog.ui.Component.call(this, domHelper);
 };
-
 goog.inherits(ble.scratch.Canvas, goog.ui.Component);
 
 /**
@@ -298,7 +297,7 @@ ble.scratch.Canvas.prototype.createDom = function() {
  * @override
  */
 ble.scratch.Canvas.prototype.enterDocument = function() {
-  goog.base(this, 'enterDocument');
+  ble.scratch.Canvas.superClass_.enterDocument.call(this); // TODO: change to `super.method` after changing to ES2015 classes and inheritance
   this.getRawContext().lineJoin = "round";
   this.getRawContext().lineCap = "round";
 };

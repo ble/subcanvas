@@ -154,7 +154,7 @@ ble.scribble.style.StylePicker.prototype.createDom = function() {
 };
 
 ble.scribble.style.StylePicker.prototype.enterDocument = function() {
-  goog.base(this, 'enterDocument');
+  ble.scribble.style.StylePicker.superClass_.enterDocument.call(this); // TODO: change to `super.method` after changing to ES2015 classes and inheritance
 
   var sEl = this.slider.getElement();
   sEl.style['width'] = 20;

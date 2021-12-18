@@ -53,7 +53,7 @@ goog.inherits(ble.scribble.DrawEvent, goog.events.Event);
  * @extends {ble.scratch.Canvas}
  */
 ble.scribble.Canvas = function(width, height, opt_drawing) {
-  ble.scratch.Canvas.call(this, width, height);
+  ble.scratch.Canvas.call(this, width, height); // TODO: use ES2015 classes & inheritance instead
   if(opt_drawing !== undefined)
     this.drawing = opt_drawing;
   else
@@ -62,7 +62,7 @@ ble.scribble.Canvas = function(width, height, opt_drawing) {
   this.modes = this.makeModes();
   this.style = ble._2d.path.painterDefault;
 };
-goog.inherits(ble.scribble.Canvas, ble.scratch.Canvas);
+goog.inherits(ble.scribble.Canvas, ble.scratch.Canvas); // TODO: use ES2015 classes & inheritance instead
 
 ble.scribble.Canvas.prototype.repaintComplete = function(ctx) {
   ctx.clearRect(0, 0, this.width_px, this.height_px);
@@ -127,7 +127,7 @@ ble.scribble.Canvas.prototype.animateInterval = function(replay_dur, capture_dur
 };
 
 ble.scribble.Canvas.prototype.handleEvent = function(event) {
-  goog.base(this, "handleEvent", event);
+  ble.scratch.Canvas.handleEvent.call(this, event); // TODO: use `super.method` after converting to ES2015-style classes
   if(event.propagationStopped_)
     return;
   var drawing = this.drawing;
@@ -179,7 +179,7 @@ ble.scribble.Canvas.prototype.makeModes = function() {
 };
 
 ble.scribble.Canvas.prototype.enterDocument = function() {
-  goog.base(this, 'enterDocument');
+  ble.scribble.Canvas.superClass_.enterDocument.call(this);
   this.setMode(0);
 };
 
@@ -274,7 +274,7 @@ ble.scribble.UI.prototype.setEnabled = function(enabled) {
 };
 
 ble.scribble.UI.prototype.enterDocument = function() {
-  goog.base(this, 'enterDocument');
+  ble.scribble.UI.superClass_.enterDocument.call(this); // TODO: change to `super.method` after changing to ES2015 classes and inheritance
   this.canvas.getElement().style['border'] = '1px solid black';
   var ctx = this.canvas.getRawContext();
   ctx.lineJoin = "round";
@@ -303,7 +303,7 @@ ble.scribble.UI.prototype.exitDocument = function() {
     var key = this.listenerKeys.pop();
     goog.events.unlistenByKey(key);
   }
-  goog.base(this, 'exitDocument');
+  ble.scribble.UI.superClass_.exitDocument.call(this); // TODO: change to `super.method` after changing to ES2015 classes and inheritance
 };
 
 ble.scribble.UI.prototype.setPicture = function(startTime, data) {

@@ -4,6 +4,7 @@ goog.require('ble.scribble.Simultaneous');
 goog.require('ble.scribble.Canvas');
 goog.require('ble.scribble.style.StylePicker');
 goog.require('ble.scribble.style.EventType');
+goog.require('ble.Scribbles');
 
 goog.require('goog.events');
 goog.require('goog.ui.Menu');
