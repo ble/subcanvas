@@ -41,7 +41,7 @@ ble.Scribbles.prototype.update_ = function() {
  */
 ble.Scribbles.prototype.initialize_ = function() {
   var keys = this.read_(this.indexKey_);  
-  if(goog.isNull(keys) || !goog.isDef(keys)) {
+  if(keys !== undefined) {
     keys = [];
     this.write_(this.indexKey_, keys); 
   }
@@ -50,10 +50,10 @@ ble.Scribbles.prototype.initialize_ = function() {
   for(var i = 0; i < keys.length; i++) {
     var key = keys[i];
     var scribble = this.read_(key);
-    if(!goog.isDefAndNotNull(scribble))
+    if(scribble == null)
       continue;
     var blessed = this.blessScribble(scribble);
-    if(!goog.isDefAndNotNull(blessed))
+    if(blessed == null)
       continue;
     this.data[key] = blessed;
     this.keys.unshift(key);

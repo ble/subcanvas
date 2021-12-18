@@ -70,14 +70,14 @@ ble.scratch.Subcanvas = function(parentCanvas, pixelCoords, virtualCoords, virtu
   this.parentCanvas_ = parentCanvas;
   this.pixelCoords_ = pixelCoords;
 
-  if(goog.isDef(virtualCoords)) {
+  if(virtualCoords !== undefined) {
     this.virtualCoords_ = virtualCoords;
   } else {
     var pSz = this.pixelSize_();
     this.virtualCoords_ = new goog.math.Box(0, pSz.width, pSz.height, 0);
   }
 
-  this.virtualizeOffset = goog.isDef(virtualizeOffset) ? virtualizeOffset : false;
+  this.virtualizeOffset = virtualizeOffset !== undefined ? virtualizeOffset : false;
   goog.events.EventTarget.call(this);
 };
 goog.inherits(ble.scratch.Subcanvas, goog.events.EventTarget);
@@ -153,7 +153,7 @@ ble.scratch.Subcanvas.prototype.affinePixelToVirtual = function() {
  * @override
  */
 ble.scratch.Subcanvas.prototype.dispatchEvent = function(event) {
-  if(goog.isDef(event.offsetX) && goog.isDef(event.offsetY)) {
+  if(event.offsetX !== undefined && event.offsetY !== undefined) {
     this.virtualizeEvent(event);
     if(this.virtualizeOffset) {
       event.offsetX = event.virtualX;
@@ -244,7 +244,7 @@ ble.scratch.Canvas.prototype.forwardEvents = function(region, eventType) {
 
 ble.scratch.Canvas.prototype.handleEvent = function(event) {
   var regions = this.regions_[event.type];
-  if(goog.isDef(regions)) {
+  if(regions !== undefined) {
     for(var i = 0; i < regions.length; i++) {
       var region = regions[i];
       if(region.inRegion(event)) { 

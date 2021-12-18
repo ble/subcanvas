@@ -56,7 +56,7 @@ ble._2d.Replay.prototype.toJSON = goog.abstractMethod;
  */
 ble._2d.StrokeReplay = function(coordinates, startTime, times, opt_painter) {
   ble._2d.Replay.call(this, startTime, coordinates, times);
-  if(goog.isDef(opt_painter))
+  if(opt_painter !== undefined)
     this.painter = opt_painter;
 };
 goog.inherits(ble._2d.StrokeReplay, ble._2d.Replay);
@@ -148,7 +148,7 @@ ble._2d.StrokeReplay.prototype.bless = function(obj) {
   var S = obj['strokeStyle'];
   var F = obj['fillStyle'];
   var painter;
-  if(goog.isDef(L))
+  if(L !== undefined)
     painter = ble._2d.path.PainterVirtual.get(L, S, F);
   return new ble._2d.StrokeReplay(c, s, t, painter);
 };
@@ -177,7 +177,7 @@ ble._2d.StrokeReplay.fromMocap = function(mocap, opt_painter) {
 ble._2d.PolylineReplay = function(coordinates, startTime, times, controls, opt_painter) {
   ble._2d.Replay.call(this, startTime, coordinates, times);
   this.controls = controls;
-  if(goog.isDef(opt_painter))
+  if(opt_painter !== undefined)
     this.painter = opt_painter;
 };
 goog.inherits(ble._2d.PolylineReplay, ble._2d.Replay);
@@ -298,7 +298,7 @@ ble._2d.PolylineReplay.prototype.bless = function(obj) {
   var S = obj['strokeStyle'];
   var F = obj['fillStyle'];
   var painter;
-  if(goog.isDef(L))
+  if(L !== undefined)
     painter = ble._2d.path.PainterVirtual.get(L, S, F);
   return new ble._2d.PolylineReplay(c, s, t, cs, painter);
 };
@@ -328,7 +328,7 @@ ble._2d.PolylineReplay.fromMocap = function(mocap, opt_painter) {
  */
 ble._2d.EraseReplay = function(coordinates, startTime, times, opt_lineWidth) {
   ble._2d.Replay.call(this, startTime, coordinates, times);
-  if(goog.isDef(opt_lineWidth))
+  if(opt_lineWidth !== undefined)
     this.lineWidth = opt_lineWidth;
 };
 goog.inherits(ble._2d.EraseReplay, ble._2d.Replay);

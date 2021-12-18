@@ -9,7 +9,7 @@ goog.provide('ble.json.PrettyPrinter');
  */ 
 ble.json.PrettyPrinter = function(opt_tab) {
   goog.json.Serializer.call(this);
-  this.tab = goog.isDef(opt_tab) ? opt_tab : "\t";
+  this.tab = opt_tab !== undefined ? opt_tab : "\t";
   this.indentLevel = 0;
 };
 goog.inherits(ble.json.PrettyPrinter, goog.json.Serializer);
@@ -25,7 +25,7 @@ ble.json.PrettyPrinter.prototype.currentIndent_ = function() {
 ble.json.PrettyPrinter.prototype.serializeObject_ = function(_obj, sb) {
   if(goog.isObject(_obj)) {
     var obj;
-    if(goog.isDef(_obj.toJSON)) {
+    if(_obj.toJSON !== undefined) {
       obj = /** @type{Object} */ _obj.toJSON();
     }
     if(!obj) {

@@ -256,8 +256,8 @@ ble.use_canvas_3 = function() {
         animulti();
       } else if(target === sequentialReplay) {
         aniseq();
-      } else if(goog.isDef(target._key_)) {
-        if(goog.isDef(scribbles.data[target._key_])) {
+      } else if(target._key_ !== undefined) {
+        if(scribbles.data[target._key_] !== undefined) {
           scribbles.currentKey = target._key_;
           drawCurrent();
         }

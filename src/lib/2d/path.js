@@ -12,7 +12,7 @@ goog.provide('ble._2d.path.painterDefault');
 ble._2d.path.Painter = function(lineWidth, strokeStyle, opt_fillStyle) {
   this.lineWidth = lineWidth;
   this.strokeStyle = strokeStyle;
-  if(goog.isDef(opt_fillStyle)) {
+  if(opt_fillStyle !== undefined) {
     this.fillStyle = opt_fillStyle;
     this.filled = true;
   } else {

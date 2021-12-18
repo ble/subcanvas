@@ -54,7 +54,7 @@ goog.inherits(ble.scribble.DrawEvent, goog.events.Event);
  */
 ble.scribble.Canvas = function(width, height, opt_drawing) {
   ble.scratch.Canvas.call(this, width, height);
-  if(goog.isDef(opt_drawing))
+  if(opt_drawing !== undefined)
     this.drawing = opt_drawing;
   else
     this.drawing = new ble.scribble.MutableDrawing(Date.now(), []);
@@ -228,7 +228,7 @@ ble.scribble.Canvas.prototype.setMode = function(modeNum) {
 };
 
 ble.scribble.Canvas.prototype.exitDocument = function() {
-  if(goog.isDef(this.mocap_)) {
+  if(this.mocap_ !== undefined) {
     var motionCapture = this.mocap_;
     goog.events.unlisten(
       this.getElement(),
