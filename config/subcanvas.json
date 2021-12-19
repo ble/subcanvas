@@ -1,0 +1,7 @@
+{
+  "id": "subcanvas",
+  "paths": ["../src/lib"],
+  "mode": "SIMPLE",
+  "level": "VERBOSE",
+  "inputs": "../src/lib/drawing/subcanvas.js"
+}
