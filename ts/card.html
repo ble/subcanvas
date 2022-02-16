@@ -1,0 +1,409 @@
+<html>
+<head>
+</head>
+<body>
+    <details><summary><div>Using REM</div></summary>
+        <div class="controls">
+            <button class="backs" type="button">BACKS</button>
+            <button class="fronts" type="button">FRONTS</button>
+            <button class="shuffle" type="button">SHUFFLE</button>
+        </div>
+        <div class="card-container card-container-rem">
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+            <div class="card">ASDF REM</div>
+        </div>
+    </details>
+    <details open>
+        <summary><div>Using VW</div></summary>
+        <div class="controls">
+            <button class="backs" type="button">BACKS</button>
+            <button class="fronts" type="button">FRONTS</button>
+            <button class="shuffle" type="button">SHUFFLE</button>
+        </div>
+        <div class="card-container card-container-vw">
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+            <div class="card">ASDF VW</div>
+        </div>
+    </details>
+</body>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+    :root {
+        --card-shadow: rgba(0, 0, 0, 0.375);
+        --color-card: rgba(255, 239, 223, 1);
+        --color-bystander: rgba(192, 192, 192, 1);
+        --color-red: rgb(192, 64, 16);
+        --color-blue: rgb(16, 64, 192);
+        --color-assassin: rgb(64, 64, 64);
+        --color-text-dark: rgb(0, 0, 0);
+        --color-text-light: rgb(255, 255, 255);
+        --color-text-agent: rgb(223, 223, 128);
+        
+        --card-radius-rem: 0.5rem;
+        --card-radius-vw: 0.8vw;
+    }
+    .controls button {
+        font-size: 2rem;
+        padding: 0.25rem 3rem;
+        text-align: center;
+        font-family: serif;
+    }
+    .card {
+        background-color: var(--color-card);
+        color: var(--color-text-dark);
+    }
+    .card.bystander {
+        background-color: var(--color-bystander);
+    }
+    .card.red {
+        background-color: var(--color-red);
+    }
+    .card.blue {
+        background-color: var(--color-blue);
+    }
+    .card.red, .card.blue {
+        color: var(--color-text-agent);
+    }
+    .card.assassin {
+        background-color: var(--color-assassin);
+        color: var(--color-text-light);
+    }
+
+    /* All layouts: container */ 
+    .card-container {
+        margin: auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    /* All layouts: card-internal */ 
+    .card {
+        display: grid;
+        place-items: center;
+    }
+    /* All layouts: pseudo-element for box-shadow behind */ 
+    .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: -1;
+    }
+
+    /* Cards sized in relative em: */
+    .card-container-rem {
+        width: 60rem;
+    }
+    .card-container-rem .card {
+        width: 10rem;
+        height: 4rem;
+        border-radius: var(--card-radius-rem);
+        margin: 0.5rem 0.5rem;
+        position: relative;
+    }
+    .card-container-rem .card::before {
+        border-radius: var(--card-radius-rem);
+        box-shadow: 0.25em 0.25em 0.5em var(--card-shadow);
+    }
+
+    /* Cards sized in view width units: */
+    .card-container-vw {
+        width: 100vw;
+    }
+    .card-container-vw .card {
+        width: 16vw;
+        height: 6.4vw;
+        border-radius: var(--card-radius-vw);
+        margin: 0.8vw 0.8vw;
+        position: relative;
+    }
+    .card-container-vw .card::before {
+        border-radius: var(--card-radius-vw);
+        box-shadow: 0.4em 0.4em 0.8em var(--card-shadow);
+    }
+
+</style>
+<script>
+    const builtinRandom = {
+        uniform() { return Math.random(); }
+    };
+    function randInt(minInclusive, maxExclusive, random=builtinRandom) {
+        const range = maxExclusive - minInclusive;
+        return Math.floor(minInclusive + range * random.uniform());
+    }
+    function sample(f, N) {
+        const result = []
+        for(let ix = 0; ix < N; ix++) {
+            result.push(f());
+        }
+        return result;
+    }
+    function count_ordered(arr) {
+        arr.sort();
+        result = {};
+        for(const item of arr) {
+            if(!(item in result)) {
+                result[item] = 0;
+            }
+            result[item]++;
+        }
+        return result;
+    }
+    function* range(start, end, increment=1) {
+        if(end === undefined) {
+            end = start;
+            start = 0;
+        }
+        if(Math.abs(increment) == 0)
+            throw new Error(`increment must be nonzero`);
+        if(isNaN(start))
+            throw new Error(`expected numeric start, got ${start}`);
+        if(isNaN(end))
+            throw new Error(`expected numeric end, got ${end}`);
+        if(isNaN(increment))
+            throw new Error(`expected numeric increment, got ${increment}`);
+        if( (end - start) / increment < 0) {
+            throw new Error(`would iterate forever: (start, end, increment) = (${start}, ${end}, ${increment})`);
+        }
+        for(let ix = start; ix < end; ix += increment) {
+            yield ix;
+        }
+    }
+</script>
+<script>
+    const colorCounts = {
+            red: 8,
+            blue: 8,
+            bystander: 7,
+            assassin: 1
+        };
+    function cards(whoFirst) {
+        const counts = {...colorCounts};
+        if(whoFirst == "red") {
+            counts.red++;
+        } else if(whoFirst == "blue") {
+            counts.blue++;
+        } else {
+            throw new Error(`expected whoFirst either red or blue; got ${whoFirst}`);
+        }
+        const result = [];
+        for(const [k, v] of Object.entries(counts)) {
+            for(let ix = 0; ix < v; ix++) {
+                result.push(k);
+            }
+        }
+        return result;
+    }
+    function swap(container, ix, jx) {
+        if(ix == jx)
+            return;
+        let tmp = container[ix];
+        container[ix] = container[jx];
+        container[jx] = tmp;
+    }
+    function shuffle(container, random=builtinRandom) {
+        for(let ix = 0; ix < container.length-1; ix++) {
+            swap(container, ix, randInt(ix, container.length, random));
+        }
+        return container;
+    }
+    function *zip(...items) {
+        if(items.length == 0)
+            return;
+        const result = []
+        for(let jx=0; jx < items.length; jx++) {
+            result.push(undefined);
+        }
+        let ix = 0;
+        while(true) {
+            for(let [jx, item] of items.entries()) {
+                if(item.length > ix) {
+                    result[jx] = item[ix];
+                } else {
+                    return;
+                }
+            }
+            yield [...result];
+            ix++;
+        }
+    }
+    function fronts(elt, colorFirst="red", random=builtinRandom) {
+        const cards = Array.from(elt.querySelectorAll(".card"));
+        const faces = shuffle(cards(colorFirst), random)
+        const classes = Object.keys(colorCounts);
+        if(cards.length != faces.length) {
+            throw new Error(`expected cards.length != face.length (${cards.length} != ${faces.length})`);
+        }
+        for(let card of cards) {
+            card.classList.remove(...classes);
+            card.classList.add()
+        }
+        for(let [card, face] of zip(cards, faces)) {
+            card.classList.remove(...classes);
+            card.classList.add(face);
+        }
+    }
+    function backs(elt) {
+        const cards = Array.from(elt.querySelectorAll(".card"));
+        const classes = Object.keys(colorCounts);
+        for(let card of cards) {
+            card.classList.remove(...classes);
+        }
+    }
+
+    function randomBoard(firstColor="red", random=builtinRandom) {
+        return shuffle(cards(firstColor));
+    }
+    class Controller {
+        static createOn(parent, firstColor="red", random=builtinRandom, truth=undefined) {
+            if(truth === undefined) {
+                truth = randomBoard(firstColor, random);
+            }
+            let result = new Controller(
+                Array.from(parent.querySelectorAll(".card")),
+                truth);
+            result.attach(
+                parent.querySelector("button.backs"),
+                parent.querySelector("button.fronts"),
+                parent.querySelector("button.shuffle")
+            )
+        }
+        constructor(cards, truth) {
+            this.cards = cards.map((card)=>new WeakRef(card));
+            this.checkTruth(truth);
+            this.truth = truth;
+        }
+        checkTruth(truth) {
+            if(this.cards.length != truth.length) {
+                throw new Error(`expected cards.length != face.length (${cards.length} != ${truth.length})`);
+            }
+        }
+        attach(backBtn, frontBtn, shuffleBtn) {
+            backBtn.addEventListener('click', ()=>this.backs());
+            frontBtn.addEventListener('click', ()=>this.fronts());
+            shuffleBtn.addEventListener('click', ()=>this.shuffle());
+            for(let ix = 0; ix < this.cards.length; ix++) {
+                this.cards[ix].deref().addEventListener('click', ()=>this.cardClick(ix));
+            }
+        }
+        get classes() {
+            return Object.keys(colorCounts);
+        }
+        get indices() {
+            return Array.from(range(this.cards.length));
+        }
+        showFront(ix) {
+            let card = this.cards[ix].deref();
+            card.classList.remove(...this.classes);
+            card.classList.add(this.truth[ix]);
+        }
+        showBack(ix) {
+            let card = this.cards[ix].deref();
+            card.classList.remove(...this.classes);
+        }
+        isFront(ix) {
+            let cardClasses = Array.from(this.cards[ix].deref().classList);
+            let classes = this.classes;
+            for(let cls of classes) {
+                if(cardClasses.includes(cls)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        cardClick(ix) {
+            if(this.isFront(ix)) {
+                return this.showBack(ix);
+            }
+            return this.showFront(ix);
+        }
+        fronts() {
+            for(let ix of this.indices) {
+                console.log(ix);
+                this.showFront(ix);
+            }
+        }
+        backs() {
+            for(let ix of this.indices) {
+                this.showBack(ix);
+            }
+        }
+        assignTruth(newTruth) {
+            let frontState = this.indices.map(this.isFront.bind(this));
+            this.checkTruth(newTruth);
+            this.truth = [...newTruth];
+            frontState.forEach((isFront, ix) => {
+                if(isFront) {
+                    this.showFront(ix);
+                }
+            });
+        }
+        shuffle(colorFirst=undefined, random=builtinRandom) {
+            if(colorFirst === undefined) {
+                colorFirst = ["red", "blue"][randInt(0, 2, random)];
+            }
+            this.assignTruth(randomBoard(colorFirst, random));
+        }
+    }
+    function installControllers() {
+        window.codenamesControllers = [];
+        let allControls = document.querySelectorAll(".controls");
+        for(let controls of allControls) {
+            const parent = controls.parentElement;
+            const controller = Controller.createOn(parent);
+            window.codenamesControllers.push(controller);
+        }
+    }
+    installControllers();
+</script>
+</html>

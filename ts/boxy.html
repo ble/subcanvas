@@ -1,0 +1,114 @@
+<html><head></head>
+<body>
+    <script type="module" src="boxy.js"></script>
+    <box-elt left="0" bottom="0" width="160" aspectX_overY="1.77777777778"></box-elt>
+    <box-elt left="0" bottom="0" height="90" aspectX_overY="1.77777777778"></box-elt>
+    <box-elt left="0" bottom="0" top="90" aspectX_overY="1.77777777778"></box-elt>
+    <box-elt left="0" right="160" bottom="0" top="90"></box-elt>
+    <box-elt id="overspecified"
+        left="0" right="160"
+        bottom="0" top="90"
+        width="160"
+        height="90"
+        aspectX_overY="1.77777777778"></box-elt>
+    <div id="valid-cases"></div>
+    <div id="invalid-cases"></div>
+    <div id="holding-area"></div>
+    <script type="module">
+
+import {BoxElement, selectMultiple, elementPowerset, attrNames, sleep, compare} from "./boxy.js"
+
+const [overspec, validTgt, invalidTgt, holding] = selectMultiple(
+    ["#overspecified", "#valid-cases", "#invalid-cases", "#holding-area"]
+)
+window.customElements.whenDefined("box-elt").then( () => {
+    const boxElements = [];
+    for(let [ix, testBox] of elementPowerset(overspec, BoxElement.observedAttributes)) {
+        const attrs = attrNames(testBox);
+        testBox.dataset.attrnames = attrs;
+        testBox.dataset.n_attrs = attrs.length;
+        testBox.dataset.index = ix;
+        holding.appendChild(testBox);
+        boxElements.push(testBox);
+    }
+    for(let testBox of boxElements) {
+        const valid = testBox.box !== null;
+        testBox.dataset.validfirst = valid;
+    }
+    sleep(1000).then(() => {
+        for(let testBox of boxElements) {
+            const valid = testBox.box !== null;
+            testBox.dataset.validsecond = valid;
+        }
+    }).then(() => {
+        boxElements.sort( (b1, b2) => {
+            let n1 = Number.parseInt(b1.dataset.n_attrs),
+                n2 = Number.parseInt(b2.dataset.n_attrs);
+            let cn = compare(n1, n2);
+            if(cn != 0)
+                return cn;
+            let i1 = Number.parseInt(b1.dataset.index),
+                i2 = Number.parseInt(b2.dataset.index);
+            return compare(i1, i2);
+        })
+        for(let testBox of boxElements) {
+            const valid = testBox.box !== null;
+            const target = valid ? validTgt : invalidTgt;
+            const text = `Box ${testBox.dataset.index}: ${[testBox.dataset.validfirst, testBox.dataset.validsecond]} ${testBox.dataset.n_attrs} attrs- ${testBox.dataset.attrnames}`;
+            const div = document.createElement("div");
+            div.appendChild(document.createTextNode(text));
+            div.appendChild(testBox)
+            target.appendChild(div);
+        }
+    })
+    fetch("./wordlist-eng.txt").then((response)=>response.text()).then((t)=>{window.rtext = t;});
+    /*
+    const overspec = document.querySelector("#overspecified")
+    const validTgt = document.querySelector("#valid-cases")
+    const invalidTgt = document.querySelector("#invalid-cases")
+    if(!(overspec instanceof BoxElement)) {
+        throw new Error("uh oh!")
+    }
+    const attrs = BoxElement.observedAttributes;
+    for(let ix = 0; ix < 2**attrs.length; ix++) {
+        const attribsSet = [];
+        attrs.forEach( (attr, index) => {
+            if(ix & (1 << index)) {
+                attribsSet.push(attr);
+            }
+        });
+        const n = attribsSet.length;
+        const elt = document.createElement("box-elt");
+        for(let attr of attribsSet) {
+            elt.setAttribute(attr, overspec.getAttribute(attr))
+        }
+        
+        const div = document.createElement("div");
+        div.appendChild(elt);
+        const valid = elt.box !== null;
+        const text = document.createTextNode(`Index ${ix} ${valid?'':'in'}valid: ${n} attributes, ${attribsSet}`);
+        div.appendChild(text);
+        (valid ? validTgt : invalidTgt).appendChild(div);
+    }
+
+    window.setTimeout(()=>{
+        let ix = 0;
+        for(let judgedValid of Array.from(validTgt.querySelectorAll("box-elt"))) {
+            if(judgedValid.box == null) {
+                console.log(`oops ${ix}`)
+            }
+            ix++;
+        }
+        ix = 0;
+        for(let judgedInvalid of Array.from(invalidTgt.querySelectorAll("box-elt"))) {
+            if(judgedInvalid.box !== null) {
+                console.log(`ack ${ix}`)
+            }
+            ix++;
+        }
+    }, 500)*/
+})
+
+    </script>
+</body>
+</html>
