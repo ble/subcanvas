@@ -9,31 +9,31 @@
             <button class="shuffle" type="button">SHUFFLE</button>
         </div>
         <div class="card-container card-container-rem">
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
-            <div class="card">ASDF REM</div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
         </div>
     </details>
     <details open>
@@ -44,31 +44,31 @@
             <button class="shuffle" type="button">SHUFFLE</button>
         </div>
         <div class="card-container card-container-vw">
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
-            <div class="card">ASDF VW</div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
         </div>
     </details>
 </body>
@@ -305,12 +305,17 @@
         return shuffle(cards(firstColor));
     }
     class Controller {
-        static createOn(parent, firstColor="red", random=builtinRandom, truth=undefined) {
+        static createOn(parent, firstColor="red", random=builtinRandom, truth=undefined, words=undefined) {
             if(truth === undefined) {
                 truth = randomBoard(firstColor, random);
             }
+            const cards = Array.from(parent.querySelectorAll(".card"));
+            if(words == undefined && window.wordList) {
+                words = window.wordList.slice(0, cards.length);
+                words.forEach( (word, ix) => {cards[ix].innerText = word;})
+            }
             let result = new Controller(
-                Array.from(parent.querySelectorAll(".card")),
+                cards,
                 truth);
             result.attach(
                 parent.querySelector("button.backs"),
@@ -404,6 +409,13 @@
             window.codenamesControllers.push(controller);
         }
     }
-    installControllers();
+    fetch("./wordlist-eng.txt").
+        then( (response) =>response.text() ).
+        then( (wordList) =>{
+            window.wordList = wordList.split("\n").filter((x)=>x.length>0);
+            shuffle(window.wordList);
+        }).
+        then( () => installControllers()).
+        catch( (reason) => console.error("wordlist load -> controller install failed", reason))
 </script>
 </html>
