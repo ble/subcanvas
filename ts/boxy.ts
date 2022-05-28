@@ -62,6 +62,13 @@ function compare(a: number, b: number): -1 | 0 | 1 {
         return 1;
     return 0;
 }
+
+function formatNumber(x: number | undefined, places: number): string {
+    if (x === undefined) {
+        return "?";
+    }
+    return x.toFixed(places);
+}
 // End utility stuff
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -69,6 +76,11 @@ class Interval implements IntervalAbstract {
     lower?: number
     upper?: number
     width?: number
+
+    format(places: number): string {
+        const f = (x?: number) => x === undefined ? "?" : x.toFixed(places);
+        return `(${f(this.lower)}, ${f(this.upper)}), Δ=${f(this.width)}`;
+    }
 
     static nSpecified(i: Interval): number {
         return entriesDefined(i).filter( ([,v]) => v).length
@@ -170,6 +182,12 @@ class Box {
     set aspectX_overY(aspect: number | undefined) {
         this.#aspectX_overY = aspect;
     }
+    static format(box: Box, places: number): string {
+        return `
+    x: ${box.#x.format(places)}
+    y: ${box.#y.format(places)}
+    aspectX_overY: ${formatNumber(box.#aspectX_overY, places)}`
+    }
     static toDefinite(that: Box): DefiniteBox | null {
         let x = Interval.asDefinite(that.#x),
             y = Interval.asDefinite(that.#y);
@@ -197,6 +215,9 @@ type Immutable<T> = {
 };
 
 class BoxElement extends HTMLElement {
+    static InvalidBoxCallback(elt: BoxElement, box: Box) {
+        console.error("Element with invalid box specification", elt, Box.format(box, 3))
+    }
     #box: DefiniteBox | null;
     constructor() {
         super()
@@ -207,6 +228,13 @@ class BoxElement extends HTMLElement {
         this.attributeChangedCallback();
     }
     attributeChangedCallback() {
+        const spec = this.#boxSpec;
+        this.#box = Box.toDefinite(this.#boxSpec);
+        if(this.#box === null) {
+            BoxElement.InvalidBoxCallback(this, spec);
+        }
+    }
+    get #boxSpec(): Box {
         const builder = new Box();
         const parseFloat = (x: string | null): number => (x == null) ? NaN : Number.parseFloat(x);
         for(let attrName of BoxElement.#attribs) {
@@ -215,7 +243,7 @@ class BoxElement extends HTMLElement {
                 builder[attrName] = value;
             }
         }
-        this.#box = Box.toDefinite(builder);
+        return builder
     }
     get valid(): boolean {
         return this.#box != null;
