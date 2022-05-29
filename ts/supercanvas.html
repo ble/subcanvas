@@ -1,9 +1,15 @@
 <html><head></head>
 <body>
-    <script src="./supercanvas.js"></script>
-    <super-canvas
+    <script type="module" src="./supercanvas.js"></script>
+    <super-canvas id="specimen"
         leftpx='-250'
         rightpx='250'
         toppx='75' bottompx='-25'></super-canvas>
+    <script>
+customElements.whenDefined("super-canvas").then(()=> {
+    const tgt = document.getElementById("specimen")
+    tgt.addVirtualizedMouseListener("mousemove", function(evt) {});
+});
+    </script>
 </body>
 </html>

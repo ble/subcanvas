@@ -1,3 +1,4 @@
+export {mapAttrib, mapAttrib2}
 interface CustomElementHelper {
     readonly oAttributes: string[]
     prototype: object
