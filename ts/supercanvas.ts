@@ -43,7 +43,7 @@ class SuperCanvas extends HTMLElement {
         super()
         let shadowRoot = this.attachShadow({mode: 'open'})
         let style = document.createElement('style');
-        style.textContent = `canvas { border: 1px black solid; image-rendering: crisp-edges; }`;
+        style.textContent = `canvas { border: 1px white solid; image-rendering: crisp-edges; }`;
         shadowRoot.appendChild(style);
         this.canvas = document.createElement("canvas");
         shadowRoot.appendChild(this.canvas);
@@ -79,6 +79,9 @@ class SuperCanvas extends HTMLElement {
         if("handleEvent" in listener){
             return {handleEvent: this.virtualizeMouse(listener.handleEvent)}
         }
+        let counter = 0;
+        const styles = ["f00", "ff0", "0f0", "0ff", "00f", "f0f"];
+        let lastXX = NaN, lastYY = NaN;
         return (evt: Event) => {
             const e: MouseEvent = evt as MouseEvent;
             const offset = getPaddingAndBorder(e.currentTarget as HTMLElement)
@@ -87,8 +90,20 @@ class SuperCanvas extends HTMLElement {
 
             //console.log([e.offsetX - offset.border.left - offset.padding.left, e.offsetY - offset.border.top - offset.padding.top])
             let ctx = this.canvas.getContext("2d");
-            ctx?.rect(x, y, 1, 1);
+            let n = 20;
+            let xx = Math.floor(x / n) * n,
+                yy = Math.floor(y / n) * n;
+            if(xx == lastXX && yy == lastYY) {
+                return;
+            }
+            ctx?.beginPath();
+            ctx?.rect(xx, yy, n, n);
             ctx?.fill();
+            ctx.fillStyle = styles[counter];
+            counter++;
+            counter = counter % styles.length;
+            lastXX = xx;
+            lastYY = yy;
             listener(evt);
         }
     }
