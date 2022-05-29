@@ -98,10 +98,13 @@ class SuperCanvas extends HTMLElement {
             }
             ctx?.beginPath();
             ctx?.rect(xx, yy, n, n);
+            const index = (xx/n+yy/n) % styles.length;
+            console.log(index)
+            ctx.fillStyle = styles[index];
             ctx?.fill();
-            ctx.fillStyle = styles[counter];
-            counter++;
-            counter = counter % styles.length;
+
+            // counter++;
+            // counter = counter % styles.length;
             lastXX = xx;
             lastYY = yy;
             listener(evt);
