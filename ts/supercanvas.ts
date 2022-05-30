@@ -37,23 +37,48 @@ interface SuperCanvas {
     get toppx(): number;
     set toppx(x: number);
 }
+
+class VirtualizedMouseEvent extends MouseEvent {
+    actualX: number;
+    actualY: number;
+    virtualX: number;
+    virtualY: number;
+    constructor(actualX: number, actualY: number, virtualX: number, virtualY: number, me: MouseEvent) {
+        super(me.type, me);
+        this.actualX = actualX;
+        this.actualY = actualY;
+        this.virtualX = virtualX;
+        this.virtualY = virtualY;
+    }
+}
 class SuperCanvas extends HTMLElement {
+    static template: HTMLTemplateElement = document.createElement("template");
+    static {
+        this.template.innerHTML = (
+`<canvas></canvas>
+<div class="magic"></div>
+<style>
+    canvas { border: 1px white solid; image-rendering: crisp-edges; }
+    .magic { display: none; }
+</style>`)
+    }
     canvas: HTMLCanvasElement;
+    magic: Element;
     constructor() {
         super()
         let shadowRoot = this.attachShadow({mode: 'open'})
-        let style = document.createElement('style');
-        style.textContent = `canvas { border: 1px white solid; image-rendering: crisp-edges; }`;
-        shadowRoot.appendChild(style);
-        this.canvas = document.createElement("canvas");
-        shadowRoot.appendChild(this.canvas);
+        shadowRoot.appendChild(SuperCanvas.template.content.cloneNode(true));
+        this.canvas = shadowRoot.querySelector("canvas") as HTMLCanvasElement;
+        this.magic = shadowRoot.querySelector(".magic") as Element;
+        this.magic.canvas = this.canvas;
+        console.log(this.magic, "magic!");
     }
     #sizeCanvas() {
         this.canvas.setAttribute('width', this.widthpx.toString());
         this.canvas.setAttribute('height', this.heightpx.toString());
     }
-    get widthpx(): number { return this.rightpx - this.leftpx }
-    get heightpx(): number { return this.toppx - this.bottompx }
+    get widthpx(): number { return Math.abs(this.rightpx - this.leftpx) }
+    get heightpx(): number { return Math.abs(this.toppx - this.bottompx) }
 
     connectedCallback() {
         this.#sizeCanvas();
@@ -68,53 +93,33 @@ class SuperCanvas extends HTMLElement {
         return SuperCanvas.oAttributes;
     }
     
-    addVirtualizedMouseListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions) {
-        this.canvas.addEventListener(type, this.virtualizeMouse(listener), options);
-    }
-
-    virtualizeMouse(listener: EventListener): EventListener;
-    virtualizeMouse(listener: EventListenerObject): EventListenerObject;
-    virtualizeMouse(listener: EventListenerOrEventListenerObject): EventListenerOrEventListenerObject;
-    virtualizeMouse(listener: EventListenerOrEventListenerObject): EventListenerOrEventListenerObject {
-        if("handleEvent" in listener){
-            return {handleEvent: this.virtualizeMouse(listener.handleEvent)}
-        }
-        let counter = 0;
-        const styles = ["f00", "ff0", "0f0", "0ff", "00f", "f0f"];
-        let lastXX = NaN, lastYY = NaN;
-        return (evt: Event) => {
-            const e: MouseEvent = evt as MouseEvent;
-            const offset = getPaddingAndBorder(e.currentTarget as HTMLElement)
-            let x = e.offsetX - offset.border.left - offset.padding.left,
-                y = e.offsetY - offset.border.top - offset.padding.top;
-
-            //console.log([e.offsetX - offset.border.left - offset.padding.left, e.offsetY - offset.border.top - offset.padding.top])
-            let ctx = this.canvas.getContext("2d");
-            let n = 20;
-            let xx = Math.floor(x / n) * n,
-                yy = Math.floor(y / n) * n;
-            if(xx == lastXX && yy == lastYY) {
-                return;
+    #activeVirtualMouseEventTypes: Set<string> = new Set();
+    enableVirtualMouseEvents(types: ReadonlyArray<string>) {
+        for(let type of types) {
+            if(!this.#activeVirtualMouseEventTypes.has(type)) {
+                this.canvas.addEventListener(type, (e) => this.virtualizeMouseEvent(e));
             }
-            ctx?.beginPath();
-            ctx?.rect(xx, yy, n, n);
-            const index = (xx/n+yy/n) % styles.length;
-            console.log(index)
-            ctx.fillStyle = styles[index];
-            ctx?.fill();
-
-            // counter++;
-            // counter = counter % styles.length;
-            lastXX = xx;
-            lastYY = yy;
-            listener(evt);
+            this.#activeVirtualMouseEventTypes.add(type);
         }
     }
+
+    virtualizeMouseEvent(evt: Event) {
+        const e: MouseEvent = evt as MouseEvent;
+        const offset = getPaddingAndBorder(e.currentTarget as HTMLElement)
+        let x = e.offsetX - offset.border.left - offset.padding.left,
+            y = e.offsetY - offset.border.top - offset.padding.top,
+            vx = this.leftpx + (this.rightpx - this.leftpx) * (x / this.widthpx),
+            vy = this.toppx + (this.bottompx - this.toppx) * (y / this.heightpx);
+        const v = new VirtualizedMouseEvent(x, y, vx, vy, e);
+        this.magic.dispatchEvent(v);
+        evt.stopPropagation();
+    }
+
     removeVirtualizedMouseListener(type: string, listener: EventListenerOrEventListenerObject) {
 
     }
 }
-window.customElements.define('super-canvas', SuperCanvas);
+
 
 import { mapAttrib2 } from './ce_helper.js';
 mapAttrib2<SuperCanvas, number>(SuperCanvas, 'leftpx', (attr)=>Number.parseInt(attr ?? '0'), (n)=>n.toString())
@@ -122,7 +127,7 @@ mapAttrib2<SuperCanvas, number>(SuperCanvas, 'rightpx', (attr)=>Number.parseInt(
 mapAttrib2<SuperCanvas, number>(SuperCanvas, 'bottompx', (attr)=>Number.parseInt(attr ?? '0'), (n)=>n.toString())
 mapAttrib2<SuperCanvas, number>(SuperCanvas, 'toppx', (attr)=>Number.parseInt(attr ?? '250'), (n)=>n.toString())
 
-let z = new SuperCanvas();
+window.customElements.define('super-canvas', SuperCanvas);
 
 
 

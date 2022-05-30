@@ -10,8 +10,23 @@
         toppx='75' bottompx='-25'></super-canvas>
     <script>
 customElements.whenDefined("super-canvas").then(()=> {
-    const tgt = document.getElementById("specimen")
-    tgt.addVirtualizedMouseListener("mousemove", function(evt) {});
+    const tgt = document.getElementById("specimen");
+    tgt.enableVirtualMouseEvents(["mousemove"]);
+    let lastXX = NaN, lastYY = NaN, styles = ["f00", "ff0", "0f0", "0ff", "00f", "f0f"];
+    tgt.magic.addEventListener("mousemove", (event)=> {
+      let ctx = event.target.canvas.getContext("2d");
+      let n = 20;
+      let xx = Math.floor(event.actualX / n) * n,
+          yy = Math.floor(event.actualY / n) * n;
+      if(xx == lastXX && yy == lastYY) {
+          return;
+      }
+      ctx?.beginPath();
+      ctx?.rect(xx, yy, n, n);
+      const index = (xx/n+yy/n) % styles.length;
+      ctx.fillStyle = styles[index];
+      ctx?.fill();
+    });
 });
     </script>
 </body>
